@@ -1,0 +1,145 @@
+@import "../../../styles/helpers";
+@import "../../../styles/variables";
+
+$color: rgba(255, 255, 255, 0.8);
+
+.navigation {
+  color: $color;
+
+  a {
+    text-decoration: none;
+    color: white;
+  }
+
+  mat-icon {
+    color: white;
+  }
+
+  .to-expand {
+    pointer-events: none;
+  }
+
+  .is-panel-opened {
+    color: #ffffff;
+  }
+
+  .active, .active:hover, .activeNmi {
+    background-color: $side-bar-active-bg-color;
+  }
+
+  ::ng-deep .mat-expansion-panel {
+    border-radius: unset;
+    border: none;
+    background: $side-bar-bg-color;
+    box-shadow: none;
+    margin: 0;
+    .mat-expansion-panel-body{
+      padding: 0 15px 15px;
+    }
+
+    .mat-expansion-panel-header {
+      padding: 0 15px;
+      height: 48px;
+      border-radius: 5px;
+    }
+  }
+
+  mat-icon {
+    cursor: pointer;
+  }
+
+  .is-expanded {
+    color: #7bbfe4;
+  }
+
+
+  .disabled-nav {
+    background: none;
+    pointer-events: none;
+    color: #888f99;
+
+    a {
+      color: #888f99;
+    }
+
+    mat-icon {
+      color: #888f99;
+    }
+  }
+
+  .collapse-subitem {
+    height: 48px;
+  }
+
+  .admin-only {
+    display: none;
+  }
+
+  .align-right {
+    flex: 1 1 0;
+    box-sizing: border-box;
+    display: flex;
+  }
+
+  &__header {
+    align-items: center;
+    display: flex;
+    height: $header-height;
+    position: fixed;
+    top: 0;
+    .header_text{
+      margin:20px 5px 5px 10px;
+      .text-1{
+        font-size: 19px;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .text-2{
+        opacity: 0.87;
+        font-size: 12px;
+        font-style: italic;
+        text-align: right;
+      }
+
+    }
+  }
+  &__footer{
+    position: absolute;
+    bottom: 5%;
+    left: 0;
+    right: 0;
+    width: 80%;
+    margin: auto;
+    img{
+      position: relative;
+      left: 45px;
+      margin: 10px;
+    }
+    .sap-logo{
+      margin-left: 30px;
+    }
+    mat-divider{
+      opacity: 0.3;
+      margin: 5px;
+    }
+  }
+
+  &__icon {
+    margin: 8px 9px 7px 0;
+    vertical-align: -6px;
+
+    &_mat {
+      font-size: 25px;
+    }
+
+    &_svg {
+      display: inline-block;
+      height: 25px;
+      width: 25px;
+
+      ::ng-deep svg {
+        fill: currentColor;
+      }
+    }
+  }
+}

@@ -1,0 +1,58 @@
+<form class="client-form" [formGroup]="supportForm" (ngSubmit)="onSubmit(supportForm.value)" >
+  <div class="dialog-header" >
+    <p>Support</p>
+  </div>
+  <div class="dialog-content">
+
+    <!--Subject  -->
+    <div class="form-field" fxLayout="column">
+      <mat-form-field>
+        <mat-select disableOptionCentering placeholder="Choose topic *"
+                    (selectionChange)="selectSubject($event.value)"
+                    formControlName="subject">
+          <mat-option *ngFor="let supportSubject of supportSubjects" [value]=supportSubject>
+            {{supportSubject.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <!--subSubject  -->
+    <div class="form-field" fxLayout="column">
+      <mat-form-field>
+        <mat-select disableOptionCentering placeholder="Choose sub topic" formControlName="subSubject"
+                    #subSubjectEl>
+          <mat-option *ngFor="let subSubject of SubSubjectsOptions" [value]=subSubject
+                      [disabled]="subSubject === defaultSelectOption">
+            {{subSubject}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <!--Description-->
+    <div class="form-field" fxLayout="column">
+      <mat-form-field>
+        <textarea matInput placeholder="Description *" formControlName="description" class="textarea"></textarea>
+      </mat-form-field>
+    </div>
+
+    <!--Buttons-->
+    <mat-dialog-actions fxLayout="row nowrap" fxLayoutAlign="end" fxLayoutGap="14px">
+      <button color="primary" fxFlex="102px" mat-stroked-button mat-dialog-close id="cancel btn">Cancel</button>
+      <button
+        [disabled]="supportForm.invalid || (SubSubjectsOptions.length>1 && supportForm.controls.subSubject.value === defaultSelectOption)"
+        [mat-dialog-close]="true"
+        color="primary"
+        fxFlex="102px"
+        class="save"
+        mat-raised-button
+        type="submit"
+        id="save btn">
+        Submit
+      </button>
+    </mat-dialog-actions>
+  </div>
+
+</form>
+

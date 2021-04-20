@@ -1,0 +1,4 @@
+dependencies:
+  - name: generic
+    version: ">0.0.0"
+    repository: "@vatbox-helm-repo"

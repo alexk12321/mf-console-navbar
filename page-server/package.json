@@ -1,0 +1,12 @@
+{
+  "author": "Omri Marcovitch",
+  "name": "portal-server",
+  "description": "HTTP server to serve portal pages and publish logs",
+  "version": "1.0.0",
+  "main": "./lib/server.js",
+  "dependencies": {
+    "compression": "1.7.3",
+    "express": "4.16.3",
+    "hsts": "2.1.0"
+  }
+}

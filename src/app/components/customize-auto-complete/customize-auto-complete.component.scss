@@ -1,0 +1,16 @@
+mat-icon{
+  cursor: pointer;
+}
+
+.mat-form-field {
+  .mat-form-field-wrapper{
+    .mat-form-field-flex {
+      .mat-form-field-infix {
+        .mat-input-element {
+          text-overflow: ellipsis;
+          padding-right: 35px;
+        }
+      }
+    }
+  }
+}

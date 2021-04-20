@@ -1,0 +1,73 @@
+<mat-sidenav-container>
+  <mat-sidenav #sidenav class="navbar__sidenav" mode="side" [opened]="isOpenSideBarByDefault" [style.background]="sidenavColor">
+    <app-navigation
+      (sidenavToggle)="onSidenavToggle()"
+      [currentUserIsAdmin]="isAdminUser"
+      [accountId]="accountId"
+      [sidenavColor]="sidenavColor"
+    ></app-navigation>
+  </mat-sidenav>
+  <mat-sidenav-content [class.is-narrow]="true" class="navbar__content">
+    <mat-toolbar class="navbar__header header">
+      <button (click)="onSidenavToggle()" class="relative-button header__nav-toggle" mat-icon-button>
+        <mat-icon [svgIcon]="'app:menu'"></mat-icon>
+      </button>
+      <div class="header_text">
+        <div class="text-1">Concur Tax Assurance</div>
+        <div class="text-2">by VATBox</div>
+      </div>
+<!--      <img [src]="'images/vatbox-logo-dark.svg '| assetUrl " alt="VATBox" class="header__logo">-->
+      <div *ngIf="appIsReady; else loadingData" class="navbar__header__user-info">
+        <div class="user">
+          <mat-icon class="icon" [svgIcon]="'app:user'" [class.demoAccActive]="isDemoAccountActive"></mat-icon>
+          <div class="username" (dblclick)="activateIsDemoAccount()">{{ store?.user?.name || store?.user?.email || 'N/A' }}</div>
+        </div>
+        <div class="navbar__account-divider"></div>
+        <div class="account">
+          <ng-container *ngIf="hasMultipleAccounts; else singleAccount">
+            <!-- Accounts -->
+            <app-customize-auto-complete
+              fieldNameToView="name"
+              class="account-selector"
+              [defaultValue]="store?.account"
+              [listOfOptions]="store?.activeAccounts"
+              (selectedValue)="changeAccount($event)"
+            ></app-customize-auto-complete>
+          </ng-container>
+          <ng-template #singleAccount>
+            {{ store?.account?.name || 'N/A' }}
+          </ng-template>
+        </div>
+        <div class="navbar__account-divider"></div>
+        <!--Currency -->
+        <div class="currency-container">
+          <app-customize-auto-complete
+            class="currency-select"
+            [fieldNameToView]="'name'"
+            [defaultValue]="store?.currency"
+            [listOfOptions]="currencies"
+            [isCurrency]="true"
+            (selectedValue)="changeCurrency($event)"
+          ></app-customize-auto-complete>
+        </div>
+        <div class="navbar__account-divider"></div>
+        <div class="logout">
+          <a (click)="logout()">Logout</a>
+        </div>
+      </div>
+      <ng-template #loadingData>
+        <mat-spinner class="navbar__header__user-info_spinner" diameter="40"></mat-spinner>
+      </ng-template>
+    </mat-toolbar>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+<!-- support button -->
+<div *ngIf="appIsInitialized$ | async" class="title_support" [style.background]="sidenavColor">
+  <div>
+    <mat-icon>help_outline</mat-icon>
+    <a [href]="supportLink" target="_blank">
+      Support
+    </a>
+  </div>
+</div>
+

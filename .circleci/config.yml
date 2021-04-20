@@ -1,0 +1,45 @@
+version: 2.1
+jobs:
+  build:
+    working_directory: ~/dist
+
+    environment:
+      CURRENT_COMMIT: <<pipeline.git.revision>>
+
+    docker:
+      - image: circleci/node:13-browsers
+
+    steps:
+      - checkout
+
+      - vb_helm_build/aws_setup
+
+      - vb_helm_build/check_source_changes
+
+      - vb_helm_build/generate_names_tags:
+          mode: node
+
+      - setup_remote_docker
+
+      - vb_helm_build/npm_install
+
+      - run:
+          name: Setup navbar project
+          command: |
+            npm install --prefix page-server/
+
+      - vb_helm_build/frontend_build
+
+      - vb_helm_build/setup_helm
+
+      - vb_helm_build/helm_build_and_push
+
+workflows:
+  version: 2.1
+  build-push:
+    jobs:
+      - build:
+          context: env-global
+
+orbs:
+  vb_helm_build: vatbox/vb_helm_build@volatile

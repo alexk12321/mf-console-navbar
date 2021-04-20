@@ -1,0 +1,97 @@
+<div class="navigation">
+  <div class="navigation__header header">
+    <button (click)="onSidenavToggle()" class="relative-button header__nav-toggle" mat-icon-button>
+      <mat-icon>menu</mat-icon>
+    </button>
+<!--    <img [src]="'images/vatbox-logo-white-2.svg '| assetUrl " alt="VATBox" class="header__logo">-->
+    <div class="header_text">
+      <div class="text-1">Concur Tax Assurance</div>
+      <div class="text-2">by VATBox</div>
+    </div>
+  </div>
+
+  <mat-accordion>
+    <div *ngFor="let parentItems of navigation">
+      <mat-expansion-panel *ngFor="let item of parentItems.items"
+                           [hideToggle]="true"
+                           [class.disabled-nav]="!item.isAuthorized"
+                           [ngClass]="{'disabled-nav': !item.isAuthorized}"
+                           [style.background]="sidenavColor"
+                           #mep="matExpansionPanel"
+                           [expanded]="expandActiveMenu(item)">
+
+        <mat-expansion-panel-header
+          [ngClass]="{'active': isRouterActive(item)}"
+          *ngIf="itemIsDisplayable(item)"
+        >
+          <a [class.active]="isRouterActive(item)"
+             [ngClass]="{'is-panel-opened': expandActiveMenu(item), 'to-expand': item.children}"
+             [routerLink]="generateUrl(item)">{{item.display}}</a>
+          <span class='align-right' *ngIf="item.children && item.children.length">
+            <span class='align-right'></span>
+            <mat-icon
+              [ngClass]="{'is-expanded': expandActiveMenu(item)}"
+              [@indicatorRotate]="mep.expanded ? 'expanded': 'collapsed'"
+            >
+              expand_more
+            </mat-icon>
+          </span>
+        </mat-expansion-panel-header>
+        <mat-expansion-panel *ngFor="let child of item.children" [disabled]="child.url.length < 1 || clickButton"
+                             [permission]="child.permission"
+                             [context]="accountId"
+                             contextType="account"
+                             [hideToggle]="true"
+                             [class.disabled-nav]="!child.isAuthorized"
+                             [ngClass]="{'disabled-nav': !child.isAuthorized}"
+                             (click)="clickButton=true; expanded = child.children?.length > 0"
+                             [expanded]="expandActiveMenu(child) || (expanded && mep2?.expanded)"
+                             [style.background]="sidenavColor"
+                             #mep2="matExpansionPanel">
+
+          <mat-expansion-panel-header mat-button
+                                      *ngIf="itemIsDisplayable(child)"
+                                      [expandedHeight]="'48px'"
+                                      [collapsedHeight]="'48px'"
+                                      [ngClass]="{'active': isRouterActive(child) }"
+                                      [style.background-color]="isRouterActive(child) ? activeLinkColor : sidenavColor"
+          >
+            <a [ngClass]="{'is-panel-opened': expandActiveMenu(item)}"
+               [routerLink]="generateUrl(child)">{{child.display}}</a>
+            <span class='align-right' *ngIf="child.children && child.children.length">
+            <span class='align-right'></span>
+            <mat-icon
+              (click)="(mep2.expanded = !mep2.expanded) && (clickButton = true)"
+              [class.is-expanded]="expandActiveMenu(item)"
+              [@indicatorRotate]="mep2.expanded ? 'expanded': 'collapsed'"
+            >
+              expand_more
+            </mat-icon>
+          </span>
+          </mat-expansion-panel-header>
+          <mat-expansion-panel *ngFor="let subItem of child.children"
+                               [disabled]="clickButton"
+                               [expanded]="false"
+                               (click)="clickButton=true"
+                               [hideToggle]="true"
+                               [ngClass]="{'disabled-nav': !subItem.isAuthorized, 'collapse-subitem': !expandActiveMenu(subItem)}">
+            <mat-expansion-panel-header
+              [expandedHeight]="'48px'"
+              [collapsedHeight]="'48px'"
+              [ngClass]="{'active': isRouterActive(subItem)}"
+              [style.background-color]="isRouterActive(subItem) ? activeLinkColor : sidenavColor"
+            >
+              <a [ngClass]="{'is-panel-opened': expandActiveMenu(item)}"
+                 [routerLink]="generateUrl(subItem)">{{subItem.display}}</a>
+            </mat-expansion-panel-header>
+          </mat-expansion-panel>
+        </mat-expansion-panel>
+      </mat-expansion-panel>
+    </div>
+  </mat-accordion>
+  <div class="navigation__footer">
+    <img [src]="'images/concur.png' | assetUrl" alt="Concur">
+    <mat-divider></mat-divider>
+    <img [src]="'images/SAP.png' | assetUrl " alt="SAP" class="sap-logo">
+  </div>
+</div>

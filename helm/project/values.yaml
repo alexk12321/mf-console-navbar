@@ -1,0 +1,144 @@
+generic:
+  ### Change the following if the service name is different than the repo name in github
+  nameOverride: PROJECT_NAME
+
+  # Static dev-env-role for AWS IAM (if any)
+  ### Set the prefix depending on the role needed for the service or leave empty if no access to AWS resources required
+  # 'no-role-' no permissions
+  # 'sqs-' uses only sqs
+  # 'sqs-sns-' uses sqs & sns
+  # 'sqs-sns-s3' uses sqs, sns & s3
+  # 'sqs-s3-' uses sqs & s3
+  # 'sqs-s3-ses-' uses sqs, s3 & ses (email)
+  iamRolePrefix: no-role-
+
+  # Obtain serviceAccountName for from EKS cluster
+  eksClusterServiceAccountName:
+    select: false
+
+  ### Optional k8s resources to create
+  loggerConfig:
+    create: true
+
+  # Additional Volume
+  volume:
+    create: false # Set to false for no additional volume
+  # name: config-volume
+  # configMapName: harvester-config
+  # volumeMountName: config-volume
+  # volumeMountPath: /etc/harvester-config
+  # volumeMountReadOnly: true
+
+  serviceAccount: # For future use
+    create: false
+
+  otherResource: # For future use
+    create: false
+
+  # Execution parameters (if necessary)
+  command: ### Fill this in - Use JSON array format ["/path/cmd.sh"]
+  args: ### Fill this in - Use JSON array format ["arg1", "arg2"]
+  servicePort: 8080
+
+  # Liveness & Readiness Probes
+  ### Adjust according to service-provided API
+  probe:
+    enabled: false
+    livenessPath: /liveness
+    livenessTimeout: 5
+    livenessPeriod: 60
+    readinessPath: /readiness
+    readinessTimeout: 5
+    readinessPeriod: 60
+
+  # Resources to assign to pod
+  # Adjust according to the service requirements
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+
+  # Autoscailer
+  # These are good starting defaults for most services - change if necessary
+  autoscaling:
+    enabled: true
+    stag:
+      minReplicas: 1
+      maxReplicas: 3
+      targetCPUUtilizationPercentage: 80
+    prod:
+      minReplicas: 2
+      maxReplicas: 6
+      targetCPUUtilizationPercentage: 80
+
+  # Mongo connection
+  # Connection String:
+  # mongodb://{{ .Values.mongo.user }}:{{ .Values.mongo.pass }}@{{ .Values.mongo.primaryServer }}{{ .Values.mongo.secondaryServer }}:27000/<db_name>
+  mongo:
+    ### Fill in the dbname if using mongo
+    dbname: console
+    ### Change the following if this service requires a different variable for the mongo full URI
+    varname: MONGO_URI
+    ### Type determines the mongo db server to use
+    ### full3 = for services that use mongo DB v3.x and require pre-populated data
+    ### empty3 = for services that use mongo DB v3.x and don't require data
+    ### empty4 = for services that use mongo DB v4.x and don't require data
+    type: full3
+
+  mysql: ### Fill in if using MySQL
+    dbname:
+    ### Change the following if this service requires a different variable for the mysql full URI
+    varname: MYSQL_URI
+
+  elastic: ### Set enabled=true if using elastic search
+    enabled:
+
+  redis: ### Set dbnum=<service redis db number> if using redis
+    dbnum:
+
+  ### Dynamic environment variables config
+  # USAGE:
+  # env:
+  # {{- range $k, $v := .Values.environmentVariables }}
+  # - name: {{ quote $k }}
+  #   value: {{ quote $v }}
+  # {{- end }}
+  # Example:
+  environmentVariables:
+    MY_ENV_VAR: "my_value"
+
+  # The following is the prefix for sns topic arn's. If the service requires names rather than arn's, make this an empty string
+  snsTopicPrefix: "arn:aws:sns:eu-west-1:395499912268:"
+  # The next 3 are similar to the environmentVariables, but for sns and sqs. Just use the suffix and the env prefix will be glued on automagically
+  snsTopics:
+    SNS_TOPIC: "my-outgoing-topic"
+
+  sqsQueues:
+    SQS_QUEUE: "my-queue-example"
+
+  # Optionally for services that need the name of the deadletter queue too
+  sqsDLQueues:
+    SQS_DEADLETTERS: "my-queue-example-deadletters"
+
+  ### All settings below this line don't need to be changed except in unusual circumstances
+  ### They either have a value that is good for 99% of the cases, or are manipulated by the CI script
+
+  # Default number of pods
+  replicaCount: 1
+
+  # Image information
+  # Image string: "{{ .Values.image.repository }}/{{ .Values.image.name }}:{{ .Values.image.tag }}"
+  # Don't change the following settings
+  image:
+    repository: 395499912268.dkr.ecr.eu-west-1.amazonaws.com
+    name: IMAGE_NAME
+    tag: IMAGE_TAG
+    pullPolicy: IfNotPresent
+
+  # Service
+  service:
+    type: ClusterIP
+    port: 80 # This is the port on which the service publishes the endpoints externally

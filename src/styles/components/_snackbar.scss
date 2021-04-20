@@ -1,0 +1,22 @@
+.view-invoice-warn-message .mat-simple-snackbar-action {
+  color: #ffae42;
+}
+.success-snackbar {
+  background-color: $success-background !important;
+}
+
+.default-snackbar {
+  background-color: $primary-color-dialog !important;
+}
+.warning-snackbar {
+  background-color: $warn-background !important;
+}
+
+.snackbar-icon-status {
+  font-size: 30px !important;
+}
+
+.snackbar-message {
+  place-content: start !important;
+}
+
